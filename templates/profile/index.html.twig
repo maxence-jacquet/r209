@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil utilisateur{% endblock %}
+
+{% block body %}
+  <div class="d-flex flex-column align-items-center">
+    <h1 class="mb-4 text-info text-center">👤 Profil utilisateur</h1>
+
+    <div class="card shadow-sm" style="max-width: 500px; width: 100%;">
+      <div class="card-body">
+        <ul class="list-group list-group-flush text-center">
+          <li class="list-group-item">
+            <strong>📝 Nom :</strong>
+            <span class="text-primary">{{ user.nom ?: 'Non renseigné' }}</span>
+          </li>
+          <li class="list-group-item">
+            <strong>🧑 Prénom :</strong>
+            <span class="text-primary">{{ user.prenom ?: 'Non renseigné' }}</span>
+          </li>
+          <li class="list-group-item">
+            <strong>📧 Adresse mail :</strong>
+            <a href="mailto:{{ user.email }}" class="text-decoration-none">{{ user.email }}</a>
+          </li>
+          <li class="list-group-item">
+            <strong>🔑 Rôles :</strong>
+            <ul class="mb-0 list-unstyled">
+              {% for role in user.roles %}
+                <li>⭐ <span class="text-success">{{ role }}</span></li>
+              {% else %}
+                <li class="text-muted">Aucun rôle</li>
+              {% endfor %}
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}
