@@ -38,7 +38,7 @@ final class NoteController extends AbstractController
 
             return $this->redirectToRoute('app_note_index', [], Response::HTTP_SEE_OTHER);
         }
-
+        
         return $this->render('note/new.html.twig', [
             'note' => $note,
             'form' => $form,
@@ -56,12 +56,27 @@ final class NoteController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/{id}/edit', name: 'app_note_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Note $note, EntityManagerInterface $entityManager): Response
-    {
+    public function edit(
+        Request $request, 
+        Note $note, 
+        EntityManagerInterface $entityManager, 
+        Security $security
+    ): Response {
         $form = $this->createForm(NoteForm::class, $note);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Création d'une nouvelle instance de VieNote
+            $vieNote = new VieNote();
+            $vieNote->setDescription($note->getDescription()); // ou autre champ pertinent
+            $vieNote->setCreateur($security->getUser()); // récupère l'utilisateur connecté
+            $vieNote->setNote($note);
+            $vieNote->setUpdatedAt(new \DateTimeImmutable());
+
+            // Persistance de l'historique
+            $entityManager->persist($vieNote);
+
+            // Sauvegarde des modifications de la note
             $entityManager->flush();
 
             return $this->redirectToRoute('app_note_index', [], Response::HTTP_SEE_OTHER);

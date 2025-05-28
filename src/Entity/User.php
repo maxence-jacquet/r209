@@ -50,9 +50,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Note::class, mappedBy: 'user')]
     private Collection $notes;
 
+    /**
+     * @var Collection<int, VieNote>
+     */
+    #[ORM\OneToMany(targetEntity: VieNote::class, mappedBy: 'createur')]
+    private Collection $note;
+
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->note = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,5 +203,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, VieNote>
+     */
+    public function getNote(): Collection
+    {
+        return $this->note;
     }
 }
