@@ -1,30 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Etat{% endblock %}
+{% block title %}Détail État{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}
 
 {% block body %}
-    <h1>Etat</h1>
+  <div class="container">
+    <h1 class="mb-4">📋 Détail de l'état</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ etat.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ etat.nom }}</td>
-            </tr>
-            <tr>
-                <th>Couleur</th>
-                <td>{{ etat.couleur }}</td>
-            </tr>
-        </tbody>
+    <table class="table table-striped table-bordered">
+      <tbody>
+        <tr>
+          <th>Id</th>
+          <td>{{ etat.id }}</td>
+        </tr>
+        <tr>
+          <th>Nom</th>
+          <td>{{ etat.nom }}</td>
+        </tr>
+        <tr>
+          <th>Couleur</th>
+          <td>
+            <span class="badge" style="background-color: {{ etat.couleur }};">
+              {{ etat.couleur }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
     </table>
 
-    <a href="{{ path('app_etat_index') }}">back to list</a>
+    <div class="d-flex gap-2">
+      <a href="{{ path('app_etat_index') }}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left-circle"></i> Retour à la liste
+      </a>
 
-    <a href="{{ path('app_etat_edit', {'id': etat.id}) }}">edit</a>
+      <a href="{{ path('app_etat_edit', {'id': etat.id}) }}" class="btn btn-primary">
+        <i class="bi bi-pencil-square"></i> Modifier
+      </a>
 
-    {{ include('etat/_delete_form.html.twig') }}
+      {{ include('etat/_delete_form.html.twig') }}
+    </div>
+  </div>
 {% endblock %}

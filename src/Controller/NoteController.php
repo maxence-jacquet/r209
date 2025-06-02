@@ -3,13 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Note;
+use App\Entity\VieNote;              // Pense à importer VieNote si ce n’est pas fait
 use App\Form\NoteForm;
 use App\Repository\NoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/note')]
@@ -24,7 +25,7 @@ final class NoteController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_note_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -45,7 +46,7 @@ final class NoteController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_note_show', methods: ['GET'])]
     public function show(Note $note): Response
     {
@@ -54,29 +55,25 @@ final class NoteController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_note_edit', methods: ['GET', 'POST'])]
-    public function edit(
-        Request $request, 
-        Note $note, 
-        EntityManagerInterface $entityManager, 
-        Security $security
-    ): Response {
+    public function edit(Request $request, Note $note, EntityManagerInterface $entityManager): Response
+    {
         $form = $this->createForm(NoteForm::class, $note);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Création d'une nouvelle instance de VieNote
+            // Récupérer l'utilisateur connecté
+            $user = $this->getUser();
+
+            // Créer une instance VieNote pour l'historique
             $vieNote = new VieNote();
-            $vieNote->setDescription($note->getDescription()); // ou autre champ pertinent
-            $vieNote->setCreateur($security->getUser()); // récupère l'utilisateur connecté
+            $vieNote->setDescription($note->getDescription());
+            $vieNote->setCreateur($user);
             $vieNote->setNote($note);
             $vieNote->setUpdatedAt(new \DateTimeImmutable());
 
-            // Persistance de l'historique
             $entityManager->persist($vieNote);
-
-            // Sauvegarde des modifications de la note
             $entityManager->flush();
 
             return $this->redirectToRoute('app_note_index', [], Response::HTTP_SEE_OTHER);
@@ -88,11 +85,11 @@ final class NoteController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_note_delete', methods: ['POST'])]
     public function delete(Request $request, Note $note, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$note->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$note->getId(), $request->request->get('_token'))) {
             $entityManager->remove($note);
             $entityManager->flush();
         }

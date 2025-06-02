@@ -24,7 +24,7 @@ final class TagController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_tag_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -45,7 +45,7 @@ final class TagController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_tag_show', methods: ['GET'])]
     public function show(Tag $tag): Response
     {
@@ -72,6 +72,7 @@ final class TagController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_tag_delete', methods: ['POST'])]
     public function delete(Request $request, Tag $tag, EntityManagerInterface $entityManager): Response
     {

@@ -3,20 +3,11 @@
 {% block title %}Dashboard Admin{% endblock %}
 
 {% block body %}
-<!-- Formulaire -->
-<div class="container mt-4">
-    <form method="post" action="{{ path('formulaire_exemple') }}">
-        <div class="mb-3">
-            <label for="exemple_input" class="form-label">Saisir un texte :</label>
-            <input type="text" class="form-control" id="exemple_input" name="exemple_input" placeholder="Entrez une valeur">
-        </div>
-        <button type="submit" class="btn btn-primary">Envoyer</button>
-    </form>
-</div>
-<!-- Tableau des tâches -->
+
 <div class="container mt-4">
     <h1>Admin – Notes filtrées avec Criteria</h1>
     <div class="row">
+
         <div class="col-md-4">
             <h5 class="text-primary">📌 Notes "En cours"</h5>
             <ul class="list-group">
@@ -38,6 +29,15 @@
                     <li class="list-group-item">
                         {{ note.titre }}<br>
                         <small class="text-muted">{{ note.etat.nom }}</small>
+                        <br>
+                        <small>
+                            Tags :
+                            {% for tag in note.tag %}
+                                <span class="badge bg-secondary">{{ tag.nom }}</span>
+                            {% else %}
+                                <em>Pas de tag</em>
+                            {% endfor %}
+                        </small>
                     </li>
                 {% else %}
                     <li class="list-group-item">Aucune note urgente</li>
@@ -45,23 +45,36 @@
             </ul>
         </div>
 
+
         <div class="col-md-4">
             <h5 class="text-success">👤 Toutes vos notes</h5>
             <ul class="list-group">
                 {% for note in notes_utilisateur %}
                     <li class="list-group-item">
                         {{ note.titre }}<br>
-                        <small class="text-muted">{{ note.etat.nom }}</small>
+                        <small class="text-muted">{{ note.etat.nom }}</small><br>
+                        <small>
+                            Tags :
+                            {% if note.tag|length > 0 %}
+                                {% for tag in note.tag %}
+                                    <span class="badge bg-secondary">{{ tag.nom }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <em>Pas de tag</em>
+                            {% endif %}
+                        </small>
                     </li>
                 {% else %}
                     <li class="list-group-item">Aucune note trouvée</li>
                 {% endfor %}
             </ul>
         </div>
+
     </div>
-	<div class="row">
+
+    <div class="row mt-4">
         <div class="col-md-4">
-            <h5 class="text-primary">📌 Notes "En cours"</h5>
+            <h5 class="text-primary">📌 Notes "En cours" (Deuxième affichage)</h5>
             <ul class="list-group">
                 {% for note in notes_en_cours2 %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -73,7 +86,6 @@
                 {% endfor %}
             </ul>
         </div>
-	</div>
+    </div>
 </div>
-
 {% endblock %}

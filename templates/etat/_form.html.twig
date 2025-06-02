@@ -1,4 +1,12 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+  <div class="mb-3">
+    {{ form_row(form.nom) }}
+  </div>
+  <div class="mb-3">
+    {{ form_row(form.couleur) }}
+  </div>
+
+  <button class="btn btn-primary">
+    <i class="bi bi-check-circle"></i> {{ button_label|default('Enregistrer') }}
+  </button>
 {{ form_end(form) }}

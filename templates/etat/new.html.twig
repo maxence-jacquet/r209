@@ -1,11 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Etat{% endblock %}
+{% block title %}Nouvel État{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Etat</h1>
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">➕ Créer un nouvel État</h1>
+      <a href="{{ path('app_etat_index') }}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left-circle"></i> Retour à la liste
+      </a>
+    </div>
 
-    {{ include('etat/_form.html.twig') }}
-
-    <a href="{{ path('app_etat_index') }}">back to list</a>
+    <div class="card shadow-sm">
+      <div class="card-body">
+        {{ include('etat/_form.html.twig') }}
+      </div>
+    </div>
+  </div>
 {% endblock %}

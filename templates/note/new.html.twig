@@ -1,11 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Note{% endblock %}
+{% block title %}Nouvelle Note{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Note</h1>
+  <div class="card shadow-lg">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">📝 Création d’une nouvelle Note</h3>
+      <a href="{{ path('app_note_index') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Retour à la liste
+      </a>
+    </div>
 
-    {{ include('note/_form.html.twig') }}
+    <div class="card-body">
+      {{ include('note/_form.html.twig') }}
+    </div>
+  </div>
+{% endblock %}
 
-    <a href="{{ path('app_note_index') }}">back to list</a>
+{% block javascripts %}
+  {{ parent() }}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', e => {
+          if (!confirm('✅ Confirmez-vous la création de cette nouvelle note ?')) {
+            e.preventDefault();
+          }
+        });
+      }
+    });
+  </script>
 {% endblock %}
